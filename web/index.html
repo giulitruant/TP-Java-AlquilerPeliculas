@@ -12,12 +12,12 @@ and open the template in the editor.
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <script>
             function Valida() {
-                if (document.form.email.value == "") {
+                if (document.form.email.value === "") {
                     alert("Please enter Login Name.");
                     document.loginform.userName.focus();
                     return false;
                 }
-                if (document.form.contrasena.value == "") {
+                if (document.form.contrasena.value === "") {
                     alert("Please enter password.");
                     document.userform.password.focus();
                     return false;
