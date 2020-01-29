@@ -19,7 +19,7 @@ public class UsuarioUI {
     public Usuario getUsuario(String email, String contrasena) throws ClassNotFoundException, SQLException{
 		Usuario user = new Usuario();
 		user = usuarioDAO.getUsuario(email, contrasena);
-		if (user.equals(null))
+		if (user == null)
 			return null;
 		
 		return user;

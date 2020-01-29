@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import entities.Usuario;
 import business.UsuarioUI;
 import java.sql.SQLException;
+import javax.servlet.RequestDispatcher;
 
 /**
  *
@@ -37,19 +38,7 @@ public class srvLogin extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet srvLogin</title>");
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet srvLogin at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
+     
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -78,18 +67,25 @@ public class srvLogin extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-//processRequest(request, response);
-        String contraseña = request.getParameter("contrasena");
+        //processRequest(request, response);              
+        response.setContentType("text/html");  
+    PrintWriter out = response.getWriter(); 
+          String contraseña = request.getParameter("contrasena");
         String email = request.getParameter("email");
         Usuario usuario = new Usuario();
         try {
             usuario = usuarioUI.getUsuario(email, contraseña);
-            if (usuario.equals(null)) {
-                response.sendRedirect("./jsp/Error.jsp");
+            if (usuario == null) {
+                
+                out.print("Sorry UserName or Password Error!");
+                //response.sendRedirect("./index.html");
+                RequestDispatcher rd=request.getRequestDispatcher("./index.html"); 
+                rd.include(request, response);                  
+            } else {
+                
+                response.sendRedirect("srvLstUsuarios");
             }
 
-            response.sendRedirect("srvLstUsuarios");
-            //response.sendRedirect("./jsp/Usuario.jsp");
         } catch (ClassNotFoundException | SQLException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
