@@ -20,9 +20,9 @@ public class SocioDAO extends Conexion {
 
     Connection conn = null;
 
-    public void addGenero(Socio s) throws SQLException {
+    public void addSocio(Socio s) throws SQLException {
         conn = this.getConnection();
-        PreparedStatement stmt = conn.prepareStatement("insert into pelicula values(?, ?, ?, ?, ?, ?, ?)");
+        PreparedStatement stmt = conn.prepareStatement("insert into socio values(?, ?, ?, ?, ?, ?, ?)");
 
         stmt.setInt(5, s.getNroSocio());
         stmt.setString(1, s.getNombre());
@@ -37,7 +37,7 @@ public class SocioDAO extends Conexion {
         conn.close();
     }
 
-    public int deleteAlquiler(int idSocio) throws ClassNotFoundException, SQLException {
+    public int deleteSocio(int idSocio) throws ClassNotFoundException, SQLException {
 
         conn = this.getConnection();
         PreparedStatement stmt = conn.prepareStatement("delete from socio where nroSocio = ? ");
@@ -47,7 +47,7 @@ public class SocioDAO extends Conexion {
         return rta;
     }
 
-    public int editAlquiler(Socio s) throws ClassNotFoundException, SQLException {
+    public int editSocio(Socio s) throws ClassNotFoundException, SQLException {
 
         conn = this.getConnection();
         PreparedStatement stmt = conn.prepareStatement("update socio set nombre = ?, apellido = ?, domicilio = ?, telefono = ?, mail = ?, nroTarjeta = ?"

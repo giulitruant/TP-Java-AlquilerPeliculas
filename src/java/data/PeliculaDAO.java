@@ -19,7 +19,7 @@ public class PeliculaDAO extends Conexion{
     
     Connection conn = null;
 
-    public void addGenero(Pelicula p) throws SQLException {
+    public void addPelicula(Pelicula p) throws SQLException {
         conn = this.getConnection();
         PreparedStatement stmt = conn.prepareStatement("insert into pelicula values(?, ?, ?, ?, ?)");
 
@@ -34,7 +34,7 @@ public class PeliculaDAO extends Conexion{
         conn.close();
     }
 
-    public int deleteAlquiler(int codPelicula) throws ClassNotFoundException, SQLException {
+    public int deletePelicula(int codPelicula) throws ClassNotFoundException, SQLException {
 
         conn = this.getConnection();
         PreparedStatement stmt = conn.prepareStatement("delete from pelicula where CodPelicula = ? ");        
@@ -44,7 +44,7 @@ public class PeliculaDAO extends Conexion{
         return rta;
     }
 
-    public int editAlquiler(Pelicula p) throws ClassNotFoundException, SQLException {
+    public int editPelicula(Pelicula p) throws ClassNotFoundException, SQLException {
 
         conn = this.getConnection();
         PreparedStatement stmt = conn.prepareStatement("update pelicula set titulo = ?, descripcion = ?, duracion = ?, stock = ?"
@@ -63,10 +63,10 @@ public class PeliculaDAO extends Conexion{
         return rta;
     }
 
-    public Pelicula getAlquiler(int codPelicula) throws ClassNotFoundException, SQLException {
+    public Pelicula getPelicula(int codPelicula) throws ClassNotFoundException, SQLException {
         Pelicula p = new Pelicula();
         conn = this.getConnection();
-        PreparedStatement stmt = conn.prepareStatement("select * from alquiler where CodPelicula = ?");
+        PreparedStatement stmt = conn.prepareStatement("select * from pelicula where CodPelicula = ?");
         stmt.setInt(1, codPelicula);        
         ResultSet rs = stmt.executeQuery();
         if (!rs.next()) {
@@ -86,17 +86,17 @@ public class PeliculaDAO extends Conexion{
         return p;
     }
 
-    public ArrayList<Pelicula> getAlquileres() throws SQLException, ClassNotFoundException {
+    public ArrayList<Pelicula> getPeliculas() throws SQLException, ClassNotFoundException {
         ArrayList<Pelicula> peliculas = new ArrayList<Pelicula>();
 
         conn = this.getConnection();
-        PreparedStatement stmt = conn.prepareStatement("select * from Genero");
+        PreparedStatement stmt = conn.prepareStatement("select * from pelicula");
         ResultSet rs = stmt.executeQuery();
         while (rs.next()) {
             Pelicula p = new Pelicula();
 
-            p.setCodPelicula(rs.getInt("nroAlquiler"));
-            p.setDescripcion(rs.getString("fechaAlquiler"));
+            p.setCodPelicula(rs.getInt("CodPelicula"));
+            p.setDescripcion(rs.getString("descripcion"));
             p.setTitulo(rs.getString("titulo"));
             p.setDuracion(rs.getString("duracion"));
             p.setStock(rs.getInt("stock"));

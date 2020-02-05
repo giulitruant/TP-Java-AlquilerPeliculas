@@ -61,7 +61,7 @@ public class TarjetaCreditoDAO extends Conexion {
     public TarjetaCredito getAlquiler(int idTarjeta) throws ClassNotFoundException, SQLException {
         TarjetaCredito tc = new TarjetaCredito();
         conn = this.getConnection();
-        PreparedStatement stmt = conn.prepareStatement("select * from socio where idTarjeta = ?");
+        PreparedStatement stmt = conn.prepareStatement("select * from tarjetacredito where idTarjeta = ?");
         stmt.setInt(1, idTarjeta);
         ResultSet rs = stmt.executeQuery();
         if (!rs.next()) {
@@ -83,7 +83,7 @@ public class TarjetaCreditoDAO extends Conexion {
         ArrayList<TarjetaCredito> TarjetaCreditos = new ArrayList<TarjetaCredito>();
 
         conn = this.getConnection();
-        PreparedStatement stmt = conn.prepareStatement("select * from socio");
+        PreparedStatement stmt = conn.prepareStatement("select * from tarjetacredito");
         ResultSet rs = stmt.executeQuery();
         while (rs.next()) {
             TarjetaCredito tc = new TarjetaCredito();
