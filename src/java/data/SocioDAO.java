@@ -68,7 +68,7 @@ public class SocioDAO extends Conexion {
         return rta;
     }
 
-    public Socio getAlquiler(int codPelicula) throws ClassNotFoundException, SQLException {
+    public Socio getSocio(int codPelicula) throws ClassNotFoundException, SQLException {
         Socio s = new Socio();
         conn = this.getConnection();
         PreparedStatement stmt = conn.prepareStatement("select * from socio where nroSocio = ?");
@@ -94,7 +94,7 @@ public class SocioDAO extends Conexion {
         return s;
     }
 
-    public ArrayList<Socio> getAlquileres() throws SQLException, ClassNotFoundException {
+    public ArrayList<Socio> getSocios() throws SQLException, ClassNotFoundException {
         ArrayList<Socio> socios = new ArrayList<Socio>();
 
         conn = this.getConnection();

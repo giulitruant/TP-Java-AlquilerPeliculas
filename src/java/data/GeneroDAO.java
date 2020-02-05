@@ -32,7 +32,7 @@ public class GeneroDAO extends Conexion {
         conn.close();
     }
 
-    public int deleteAlquiler(int idGenero) throws ClassNotFoundException, SQLException {
+    public int deleteGenero(int idGenero) throws ClassNotFoundException, SQLException {
 
         conn = this.getConnection();
         PreparedStatement stmt = conn.prepareStatement("delete from Genero where idGenero = ? ");
@@ -42,7 +42,7 @@ public class GeneroDAO extends Conexion {
 
     }
 
-    public int editAlquiler(Genero gen) throws ClassNotFoundException, SQLException {
+    public int editGenero(Genero gen) throws ClassNotFoundException, SQLException {
 
         conn = this.getConnection();
         PreparedStatement stmt = conn.prepareStatement("update Genero set descripcion = ?"
@@ -58,7 +58,7 @@ public class GeneroDAO extends Conexion {
         return rta;
     }
 
-    public Genero getAlquiler(int idGenero) throws ClassNotFoundException, SQLException {
+    public Genero getGenero(int idGenero) throws ClassNotFoundException, SQLException {
         Genero gen = new Genero();
         conn = this.getConnection();
         PreparedStatement stmt = conn.prepareStatement("select * from alquiler where nroAlquiler = ?");
@@ -79,7 +79,7 @@ public class GeneroDAO extends Conexion {
         return gen;
     }
 
-    public ArrayList<Genero> getAlquileres() throws SQLException, ClassNotFoundException {
+    public ArrayList<Genero> getGeneros() throws SQLException, ClassNotFoundException {
         ArrayList<Genero> generos = new ArrayList<Genero>();
 
         conn = this.getConnection();
