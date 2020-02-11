@@ -18,9 +18,24 @@ public class UsuarioUI {
 
     UsuarioDAO usuarioDAO = new UsuarioDAO();
 
-    public Usuario getUsuario(String email, String contrasena) throws ClassNotFoundException, SQLException {
+    public void addUsuario(Usuario user) throws SQLException{                
+        usuarioDAO.addUsuario(user);
+        
+    }
+    
+    public Usuario Login(String email, String contrasena) throws ClassNotFoundException, SQLException {
         Usuario user = new Usuario();
-        user = usuarioDAO.getUsuario(email, contrasena);
+        user = usuarioDAO.Login(email, contrasena);
+        if (user == null) {
+            return null;
+        }
+
+        return user;
+    }
+    
+    public Usuario getUserbyId(int id) throws ClassNotFoundException, SQLException{
+        Usuario user = new Usuario();
+        user = usuarioDAO.getUsuario(id);
         if (user == null) {
             return null;
         }

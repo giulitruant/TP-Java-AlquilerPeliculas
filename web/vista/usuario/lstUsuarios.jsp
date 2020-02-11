@@ -32,17 +32,14 @@
                 <tr>
                     <th><%=usu.getIdUsuario()%></th>
                     <th><%=usu.getEmail()%></th>                    
-                    <th>
-                        <a href="">Agregar</a>
-                    </th>
-                    <th>
-                        <a href="">Eliminar</a>
-                    </th>
+                    <th><a href="UserController?action=edit&userId=<c:out value="${usu.getIdUsuario()}"/>Update</a></th>
+                    <th><a href="UserController?action=delete&userId=<c:out value="${usu.getIdUsuario()}"/>Delete</a></th>                    
                 </tr>
                 <%
                     }
                 %>                
             </table>
+            <p><a href="srvLstUsuarios?action=insert">Agregar</a></p>
         </form>
         <a href="index.html">Volver</a>  
     </body>

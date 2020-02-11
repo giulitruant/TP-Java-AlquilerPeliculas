@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import business.UsuarioUI;
 import entities.Usuario;
+import javax.servlet.RequestDispatcher;
 
 /**
  *
@@ -28,6 +29,10 @@ import entities.Usuario;
  */
 @WebServlet(name = "srvLstUsuarios", urlPatterns = {"/srvLstUsuarios"})
 public class srvLstUsuarios extends HttpServlet {
+
+    private static final long serialVersionUID = 1L;
+    private static String INSERT_OR_EDIT = "/vista/usuario/Usuario.jsp";
+    private static String LIST_USER = "/vista/usuario/lstUsuarios.jsp";
 
     UsuarioUI usuarioUI = new UsuarioUI();
 
@@ -42,36 +47,10 @@ public class srvLstUsuarios extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        //response.setContentType("text/html;charset=UTF-8");
-            //try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            /*
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet srvLstUsuarios</title>");
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet srvLstUsuarios at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-
-            ArrayList<Usuario> lstUsuarios = new ArrayList<Usuario>();
-            try {
-                lstUsuarios = usuarioUI.getUsuarios();
-            } catch (SQLException ex) {
-                Logger.getLogger(srvLstUsuarios.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (ClassNotFoundException ex) {
-                Logger.getLogger(srvLstUsuarios.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            request.setAttribute("lstUsuarios", lstUsuarios);
-            request.getRequestDispatcher("vista/lstUsuarios.jsp").forward(request, response);
-            */
-
-        //}
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+
     /**
      * Handles the HTTP <code>GET</code> method.
      *
@@ -83,19 +62,72 @@ public class srvLstUsuarios extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        //processRequest(request, response);
 
-        ArrayList<Usuario> lstUsuarios = new ArrayList<Usuario>();
-        try {
-            lstUsuarios = usuarioUI.getUsuarios();
-        } catch (SQLException ex) {
-            Logger.getLogger(srvLstUsuarios.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(srvLstUsuarios.class.getName()).log(Level.SEVERE, null, ex);
+        String forward = "";
+        String action = "lstUser";
+        if(request.getParameter("action") != null)
+            action = request.getParameter("action");
+
+        if (action.equalsIgnoreCase("delete")) {
+
+            boolean exito = false;
+            int userId = Integer.parseInt(request.getParameter("userId"));
+            try {
+                exito = usuarioUI.deleteUsuario(userId);
+                forward = LIST_USER;
+                request.setAttribute("users", usuarioUI.getUsuarios());
+            } catch (SQLException ex) {
+                Logger.getLogger(srvLstUsuarios.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(srvLstUsuarios.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+        } else if (action.equalsIgnoreCase("edit")) {
+
+            forward = INSERT_OR_EDIT;
+            int userId = Integer.parseInt(request.getParameter("userId"));
+            Usuario user;
+            try {
+                user = usuarioUI.getUserbyId(userId);
+                request.setAttribute("user", user);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(srvLstUsuarios.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SQLException ex) {
+                Logger.getLogger(srvLstUsuarios.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            //request.getRequestDispatcher(INSERT_OR_EDIT).forward(request, response);
+            
+            forward = INSERT_OR_EDIT;
+            RequestDispatcher view = request.getRequestDispatcher(INSERT_OR_EDIT);
+            view.forward(request, response);
+            
+
+        } else if (action.equalsIgnoreCase("lstUser")) {
+
+            ArrayList<Usuario> lstUsuarios = new ArrayList<Usuario>();
+            try {
+                lstUsuarios = usuarioUI.getUsuarios();
+            } catch (SQLException ex) {
+                Logger.getLogger(srvLstUsuarios.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(srvLstUsuarios.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            forward = LIST_USER;
+            
+            request.setAttribute("lstUsuarios", lstUsuarios);
+            //request.getRequestDispatcher(LIST_USER).forward(request, response);
+
+        } else {
+            forward = INSERT_OR_EDIT;
+            //response.sendRedirect("srvUsuario");
         }
         
-        request.setAttribute("lstUsuarios", lstUsuarios);
-        request.getRequestDispatcher("/vista/usuario/lstUsuarios.jsp").forward(request, response);
+        RequestDispatcher view = request.getRequestDispatcher(forward);
+        view.forward(request, response);
+
     }
 
     /**
@@ -110,6 +142,41 @@ public class srvLstUsuarios extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
+        
+        Usuario user = new Usuario();
+        user.setEmail(request.getParameter("email"));
+        user.setContrasena(request.getParameter("contrasena"));       
+        String idUsuario = request.getParameter("idUsuario");
+        if(idUsuario == null || idUsuario.isEmpty())
+        {
+            try {            
+                usuarioUI.addUsuario(user);
+            } catch (SQLException ex) {
+                Logger.getLogger(srvLstUsuarios.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        else
+        {            
+            user.setIdUsuario(Integer.parseInt(idUsuario));
+            try {            
+                usuarioUI.updateUsuario(user);
+            } catch (SQLException ex) {
+                Logger.getLogger(srvLstUsuarios.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(srvLstUsuarios.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }        
+        
+        try {
+            request.setAttribute("lstUsuarios", usuarioUI.getUsuarios());
+        } catch (SQLException ex) {
+            Logger.getLogger(srvLstUsuarios.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(srvLstUsuarios.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        request.getRequestDispatcher(LIST_USER).forward(request, response);
+            
+                   
     }
 
     /**

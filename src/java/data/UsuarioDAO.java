@@ -22,14 +22,12 @@ public class UsuarioDAO extends Conexion {
 
     public void addUsuario(Usuario user) throws SQLException {
         conn = this.getConnection();
-        PreparedStatement st = conn.prepareStatement("insert into usuario values(?, ?, ?)");
-
-        st.setInt(1, Integer.valueOf(user.getIdUsuario()));
-        st.setString(2, user.getEmail());
-        st.setString(3, user.getContrasena());
+        PreparedStatement st = conn.prepareStatement("insert into usuario values( ?, ?)");
+        
+        st.setString(1, user.getEmail());
+        st.setString(2, user.getContrasena());
 
         st.executeUpdate();
-
         st.close();
         conn.close();
     }
@@ -60,12 +58,34 @@ public class UsuarioDAO extends Conexion {
         return rta;
     }
 
-    public Usuario getUsuario(String email, String contrasena) throws ClassNotFoundException, SQLException {
+    public Usuario Login(String email, String contrasena) throws ClassNotFoundException, SQLException {
         Usuario user = new Usuario();
         conn = this.getConnection();
         PreparedStatement stmt = conn.prepareStatement("select * from usuario where email = ? and contrasena=?");
         stmt.setString(1, email);
         stmt.setString(2, contrasena);
+        ResultSet rs = stmt.executeQuery();
+        if (!rs.next()) {
+            return null;
+        } else {
+            do {
+                user.setIdUsuario(rs.getInt("idUsuario"));
+                user.setEmail(rs.getString("email"));
+                user.setContrasena(rs.getString("contrasena"));
+            } while (rs.next());
+        }
+
+        rs.close();
+        conn.close();
+        return user;
+
+    }
+    
+    public Usuario getUsuario(int id) throws ClassNotFoundException, SQLException {
+        Usuario user = new Usuario();
+        conn = this.getConnection();
+        PreparedStatement stmt = conn.prepareStatement("select * from usuario where idUsuario = ?");
+        stmt.setInt(1, id);
         ResultSet rs = stmt.executeQuery();
         if (!rs.next()) {
             return null;

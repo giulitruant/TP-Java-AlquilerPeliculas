@@ -5,6 +5,7 @@
  */
 package servlet;
 
+import entities.Usuario;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -13,19 +14,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import entities.Usuario;
-import business.UsuarioUI;
-import java.sql.SQLException;
-import javax.servlet.RequestDispatcher;
-
 /**
  *
  * @author giuli
  */
-@WebServlet(name = "srvLogin", urlPatterns = {"/srvLogin"})
-public class srvLogin extends HttpServlet {
-
-    UsuarioUI usuarioUI = new UsuarioUI();
+@WebServlet(name = "srvUsuario", urlPatterns = {"/srvUsuario"})
+public class srvUsuario extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -38,7 +32,7 @@ public class srvLogin extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-     
+        //Usuario user = request.getParameter("user");
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -67,30 +61,7 @@ public class srvLogin extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        //processRequest(request, response);              
-        response.setContentType("text/html");  
-    PrintWriter out = response.getWriter(); 
-          String contraseña = request.getParameter("contrasena");
-        String email = request.getParameter("email");        
-                
-        try {
-            Usuario usuario = usuarioUI.Login(email, contraseña);
-            if (usuario == null) {
-                
-                out.print("Sorry UserName or Password Error!");
-                //response.sendRedirect("./index.html");
-                RequestDispatcher rd=request.getRequestDispatcher("./index.html"); 
-                rd.include(request, response);                  
-            } else {               
-                
-                response.sendRedirect("srvLstUsuarios");
-            }
-
-        } catch (ClassNotFoundException | SQLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            response.sendRedirect("./jsp/Error.jsp");
-        }
+        processRequest(request, response);
     }
 
     /**
