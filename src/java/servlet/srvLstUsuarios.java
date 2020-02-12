@@ -31,8 +31,8 @@ import javax.servlet.RequestDispatcher;
 public class srvLstUsuarios extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
-    private static String INSERT_OR_EDIT = "/vista/usuario/Usuario.jsp";
-    private static String LIST_USER = "/vista/usuario/lstUsuarios.jsp";
+    private static String INSERT_OR_EDIT = "./vista/usuario/Usuario.jsp";
+    private static String LIST_USER = "./vista/usuario/lstUsuarios.jsp";
 
     UsuarioUI usuarioUI = new UsuarioUI();
 
@@ -96,7 +96,6 @@ public class srvLstUsuarios extends HttpServlet {
             } catch (SQLException ex) {
                 Logger.getLogger(srvLstUsuarios.class.getName()).log(Level.SEVERE, null, ex);
             }
-
             //request.getRequestDispatcher(INSERT_OR_EDIT).forward(request, response);
             
             forward = INSERT_OR_EDIT;
@@ -121,6 +120,8 @@ public class srvLstUsuarios extends HttpServlet {
             //request.getRequestDispatcher(LIST_USER).forward(request, response);
 
         } else {
+            Usuario user = new Usuario();
+            request.setAttribute("user", user);
             forward = INSERT_OR_EDIT;
             //response.sendRedirect("srvUsuario");
         }

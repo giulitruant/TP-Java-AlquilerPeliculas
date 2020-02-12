@@ -5,31 +5,20 @@
  */
 package servlet;
 
-import data.TarjetaCreditoUI;
-import entities.TarjetaCredito;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import business.UsuarioUI;
-import entities.Usuario;
-
 /**
  *
  * @author giuli
  */
 @WebServlet(name = "srvTarjetaCredito", urlPatterns = {"/srvTarjetaCredito"})
-public class srvLstUsuarios extends HttpServlet {
-
-    UsuarioUI usuarioUI = new UsuarioUI();
+public class srvTarjetaCredito extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -42,33 +31,19 @@ public class srvLstUsuarios extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        //response.setContentType("text/html;charset=UTF-8");
-            //try (PrintWriter out = response.getWriter()) {
+        response.setContentType("text/html;charset=UTF-8");
+        try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
-            /*
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet srvLstUsuarios</title>");
+            out.println("<title>Servlet srvTarjetaCredito</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet srvLstUsuarios at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet srvTarjetaCredito at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
-
-            ArrayList<Usuario> lstUsuarios = new ArrayList<Usuario>();
-            try {
-                lstUsuarios = usuarioUI.getUsuarios();
-            } catch (SQLException ex) {
-                Logger.getLogger(srvLstUsuarios.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (ClassNotFoundException ex) {
-                Logger.getLogger(srvLstUsuarios.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            request.setAttribute("lstUsuarios", lstUsuarios);
-            request.getRequestDispatcher("vista/lstUsuarios.jsp").forward(request, response);
-            */
-
-        //}
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -84,18 +59,6 @@ public class srvLstUsuarios extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
-
-        ArrayList<Usuario> lstUsuarios = new ArrayList<Usuario>();
-        try {
-            lstUsuarios = usuarioUI.getUsuarios();
-        } catch (SQLException ex) {
-            Logger.getLogger(srvLstUsuarios.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(srvLstUsuarios.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        request.setAttribute("lstUsuarios", lstUsuarios);
-        request.getRequestDispatcher("/vista/usuario/lstUsuarios.jsp").forward(request, response);
     }
 
     /**
