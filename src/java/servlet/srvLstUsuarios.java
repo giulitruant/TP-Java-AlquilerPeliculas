@@ -5,10 +5,7 @@
  */
 package servlet;
 
-import data.UsuarioDAO;
-import entities.Usuario;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -29,8 +26,7 @@ import javax.servlet.RequestDispatcher;
  */
 @WebServlet(name = "srvLstUsuarios", urlPatterns = {"/srvLstUsuarios"})
 public class srvLstUsuarios extends HttpServlet {
-
-    private static final long serialVersionUID = 1L;
+    
     private static String INSERT_OR_EDIT = "./vista/usuario/Usuario.jsp";
     private static String LIST_USER = "./vista/usuario/lstUsuarios.jsp";
 
