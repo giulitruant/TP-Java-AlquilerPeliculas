@@ -20,92 +20,68 @@
             Usuario user = (Usuario) request.getAttribute("user");
         %>
 
-        <div id="container">
+        <div id="container" style="margin: 20px 20px 20px 20px">
+            <div style="text-align: center; margin-bottom: 40px"><h1>Alta de Usuario</h1></div>
             <form  method="POST" action="srvLstUsuarios" name="frmAddUser">                
                 <input type="hidden" name="action" value="insert" />
                 <div class="row">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         <label class="sr-only" for="nombre">Nombre :</label>
-                        <input type="text" class="form-control" id="nombre" placeholder="Nombre">
+                        <input type="text" class="form-control" id="nombre" placeholder="Nombre" required>
                     </div>
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         <div class="form-group">
                             <label class="sr-only" for="apellido">Apellido :</label>
-                            <input type="text" class="form-control" id="apellido" placeholder="Apellido">
+                            <input type="text" class="form-control" id="apellido" placeholder="Apellido" required>
                         </div>
                     </div>
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         <label class="sr-only" for="domicilio">Domicilio :</label>
-                        <input type="text" class="form-control" id="domicilio" placeholder="Domicilio">
+                        <input type="text" class="form-control" id="domicilio" placeholder="Domicilio" required>
                     </div> 
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         <label class="sr-only" for="telefono">Telefono :</label>
-                        <input type="text" class="form-control" id="telefono" placeholder="Telefono">
+                        <input type="text" class="form-control" id="telefono" placeholder="Telefono" required>
                     </div>
                 </div>
                 <div class="row">                    
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         <label class="sr-only" for="nroTarjeta">N° Tarjeta del banco :</label>
                         <input type="text" class="form-control" id="nroTarjeta" placeholder="N° Tarjeta del banco">
                     </div>
-                    <div class="col-sm-3">
-                        <div class="form-group">
-                            <div class="col-sm-offset-2 col-sm-10">
-                                <div class="checkbox">
-                                    <label><input type="checkbox" id="estado">Recibe notificaciones :</label>
-                                </div>
-                            </div>
+                    <div class="col-md-3">    
+                        <div class="row">
+                        <div class="col-md-8">
+                            <label for="sel1" >Recibe notificaciones de extrenos :</label>    
                         </div>
+                        <div class="col-md-4">
+                            <select class="form-control" id="estado" >
+                                <option>Si</option>
+                                <option>NO</option>    
+                            </select>
+                        </div>
+                            </div>
                     </div>
-                    <div class="col-sm-3">
+
+                    <div class="col-md-3">
                         <!--<input type="text" name="email" value="<%= user.getEmail()%>" required placehorlder="Email" />-->
-                        <label for="email">Email address:</label>
-                        <input type="email" class="form-control" id="email">
+                        <label class="sr-only" for="email">Email :</label>
+                        <input type="email" class="form-control" id="email" placeholder="Email" required>
                     </div>
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                    <!--<input type="password" name="contrasena" <%= user.getContrasena()%> required placehorlder="Contraseña" />-->
-                        <label for="contrasena">Contraseña:</label>
-                        <input type="password" class="form-control" id="contrasena">
+                        <label class="sr-only" for="contrasena">Contraseña:</label>
+                        <input type="password" class="form-control" id="contrasena" placeholder="Contraseña" required>
                     </div>
-                </div>
-                <div class="row">                    
-                    <div class="col-sm-3">
-                        <div class="form-group">
-                            <div class="col-sm-offset-2 col-sm-10">
-                                <div class="checkbox">
-                                    <label><input type="checkbox" id="estado">Recibe notificaciones :</label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-3">
-                        <div class="form-group">
-                            <div class="col-sm-offset-2 col-sm-10">
-                                <div class="checkbox">
-                                    <label><input type="checkbox" id="estado">Recibe notificaciones :</label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                  <div class="col-sm-3">
-                        <div class="form-group">
-                            <div class="col-sm-offset-2 col-sm-10">
-                                <div class="checkbox">
-                                    <label><input type="checkbox" id="estado">Recibe notificaciones :</label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                </div>                
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-group">
                             <div class="col-sm-offset-2 col-sm-10">
-                        <input class="btn btn-success" type="submit" value="Guardar" /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        <input class="btn btn-success" type="reset" name="Cancelar" />
-                        <!--<div class="text-right">-->                    
-                        </div>
+                                <input class="btn btn-success" type="submit" value="Guardar" /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <input class="btn btn-success" type="reset" name="Cancelar" />                                         
                             </div>
+                        </div>
                     </div>
                 </div>
         </div>                        

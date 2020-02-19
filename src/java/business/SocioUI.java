@@ -18,6 +18,11 @@ public class SocioUI {
     
     SocioDAO socioDAO = new SocioDAO();
     
+     public void addUsuario(Socio user) throws SQLException{                
+        socioDAO.addSocio(user);
+        
+    }
+    
      public Socio getSocio(int id) throws ClassNotFoundException, SQLException {
         Socio socio = new Socio();
         socio = socioDAO.getSocio(id);

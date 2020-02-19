@@ -5,6 +5,7 @@
  */
 package servlet;
 
+import business.SocioUI;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import business.UsuarioUI;
+import entities.Socio;
 import entities.Usuario;
 import javax.servlet.RequestDispatcher;
 
@@ -31,6 +33,7 @@ public class srvLstUsuarios extends HttpServlet {
     private static String LIST_USER = "./vista/usuario/lstUsuarios.jsp";
 
     UsuarioUI usuarioUI = new UsuarioUI();
+    SocioUI socioUI = new SocioUI();
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -140,23 +143,34 @@ public class srvLstUsuarios extends HttpServlet {
             throws ServletException, IOException {
         processRequest(request, response);
         
-        Usuario user = new Usuario();
-        user.setEmail(request.getParameter("email"));
-        user.setContrasena(request.getParameter("contrasena"));       
+        Usuario usuario = new Usuario();
+        Socio socio = new Socio();
+        
+        socio.setNombre(request.getParameter("nombre"));
+        socio.setApellido(request.getParameter("apellido"));
+        socio.setDomicilio(request.getParameter("domicilio"));
+        socio.setEstado(request.getParameter("estado"));
+        socio.setTelefono(request.getParameter("telefono"));
+        socio.setNroTarjeta(request.getParameter("nroTarjeta"));
+        
+        usuario.setEmail(request.getParameter("email"));
+        usuario.setContrasena(request.getParameter("contrasena"));       
         String idUsuario = request.getParameter("idUsuario");
         if(idUsuario == null || idUsuario.isEmpty())
         {
             try {            
-                usuarioUI.addUsuario(user);
+                socioUI.addUsuario(socio);
+                usuarioUI.addUsuario(usuario);                
             } catch (SQLException ex) {
                 Logger.getLogger(srvLstUsuarios.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         else
         {            
-            user.setIdUsuario(Integer.parseInt(idUsuario));
+            usuario.setIdUsuario(Integer.parseInt(idUsuario));
             try {            
-                usuarioUI.updateUsuario(user);
+                socioUI.updateSocio(socio);
+                usuarioUI.updateUsuario(usuario);
             } catch (SQLException ex) {
                 Logger.getLogger(srvLstUsuarios.class.getName()).log(Level.SEVERE, null, ex);
             } catch (ClassNotFoundException ex) {
