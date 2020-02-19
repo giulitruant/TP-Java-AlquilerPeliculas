@@ -5,6 +5,8 @@
  */
 package servlet;
 
+import entities.Alquiler;
+import business.AlquilerUI;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -20,6 +22,11 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "srvAlquiler", urlPatterns = {"/srvAlquiler"})
 public class srvAlquiler extends HttpServlet {
 
+
+    private static String INSERT_OR_EDIT = "./vista/alquiler/Alquiler.jsp";
+    private static String LIST_ALQUILER = "./vista/alquiler/lstAlquiler.jsp";
+
+    AlquilerUI alquilerUI = new AlquilerUI();
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -58,7 +65,70 @@ public class srvAlquiler extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        
+                
+                String forward = "";
+                String action = "lstAlquiler";
+                if(request.getParameter("action") != null)
+                    action = request.getParameter("action");
+        
+                if (action.equalsIgnoreCase("delete")) {
+        
+                    boolean exito = false;
+                    int id = Integer.parseInt(request.getParameter("Id"));
+                    try {
+                        exito = alquilerUI.deleteAlquiler(id);
+                        forward = LIST_ALQUILER;
+                        request.setAttribute("alquileres", alquilerUI.getAlquiler());
+                    } catch (SQLException ex) {
+                        Logger.getLogger(srvAlquiler.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (ClassNotFoundException ex) {
+                        Logger.getLogger(srvAlquiler.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+        
+                } else if (action.equalsIgnoreCase("edit")) {
+        
+                    forward = INSERT_OR_EDIT;
+                    int id = Integer.parseInt(request.getParameter("id"));
+                    Alquiler alquiler;
+                    try {
+                        alquiler = alquilerUI.getAlquiler(id);
+                        request.setAttribute("alquiler", alquiler);
+                    } catch (ClassNotFoundException ex) {
+                        Logger.getLogger(srvAlquiler.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (SQLException ex) {
+                        Logger.getLogger(srvAlquiler.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    //request.getRequestDispatcher(INSERT_OR_EDIT).forward(request, response);
+                    
+                    forward = INSERT_OR_EDIT;
+                    RequestDispatcher view = request.getRequestDispatcher(INSERT_OR_EDIT);
+                    view.forward(request, response);
+                    
+        
+                } else if (action.equalsIgnoreCase("lstAlquiler")) {
+        
+                    ArrayList<Alquiler> lstAlquiler = new ArrayList<Alquiler>();
+                    try {
+                        lstAlquiler = alquilerUI.getAlquiler();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(srvAlquiler.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (ClassNotFoundException ex) {
+                        Logger.getLogger(srvAlquiler.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+        
+                    forward = LIST_ALQUILER;
+                    request.setAttribute("lstAlquiler", lstAlquiler);
+        
+                } else {
+                    Alquiler alq = new Alquiler();
+                    request.setAttribute("alq", alq);
+                    forward = INSERT_OR_EDIT;            
+                }
+                
+                RequestDispatcher view = request.getRequestDispatcher(forward);
+                view.forward(request, response);   
+
     }
 
     /**

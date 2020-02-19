@@ -5,6 +5,8 @@
  */
 package servlet;
 
+import business.GeneroUI;
+import entities.Genero;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -20,6 +22,10 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "srvGenero", urlPatterns = {"/srvGenero"})
 public class srvGenero extends HttpServlet {
 
+    private static String INSERT_OR_EDIT = "./vista/genero/genero.jsp";
+    private static String LIST_GENERO = "./vista/genero/lstGenero.jsp";
+
+    GeneroUI generoUI = new GeneroUI();
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -58,7 +64,70 @@ public class srvGenero extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        
+                
+                String forward = "";
+                String action = "lstGenero";
+                if(request.getParameter("action") != null)
+                    action = request.getParameter("action");
+        
+                if (action.equalsIgnoreCase("delete")) {
+        
+                    boolean exito = false;
+                    int id = Integer.parseInt(request.getParameter("Id"));
+                    try {
+                        exito = generoUI.deleteAlquiler(id);
+                        forward = LIST_GENERO;
+                        request.setAttribute("generos", generoUI.getAlquiler());
+                    } catch (SQLException ex) {
+                        Logger.getLogger(srvGenero.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (ClassNotFoundException ex) {
+                        Logger.getLogger(srvGenero.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+        
+                } else if (action.equalsIgnoreCase("edit")) {
+        
+                    forward = INSERT_OR_EDIT;
+                    int id = Integer.parseInt(request.getParameter("id"));
+                    Genero genero;
+                    try {
+                        genero = generoUI.getGenero(id);
+                        request.setAttribute("genero", genero);
+                    } catch (ClassNotFoundException ex) {
+                        Logger.getLogger(srvGenero.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (SQLException ex) {
+                        Logger.getLogger(srvGenero.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    //request.getRequestDispatcher(INSERT_OR_EDIT).forward(request, response);
+                    
+                    forward = INSERT_OR_EDIT;
+                    RequestDispatcher view = request.getRequestDispatcher(INSERT_OR_EDIT);
+                    view.forward(request, response);
+                    
+        
+                } else if (action.equalsIgnoreCase("lstTarjetas")) {
+        
+                    ArrayList<Genero> lstGenero = new ArrayList<Genero>();
+                    try {
+                        lstGenero = generoUI.getGenero();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(srvGenero.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (ClassNotFoundException ex) {
+                        Logger.getLogger(srvGenero.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+        
+                    forward = LIST_GENERO;
+                    request.setAttribute("lstGenero", lstGenero);
+        
+                } else {
+                    Genero gen = new Genero();
+                    request.setAttribute("gen", gen);
+                    forward = INSERT_OR_EDIT;            
+                }
+                
+                RequestDispatcher view = request.getRequestDispatcher(forward);
+                view.forward(request, response);  
+
     }
 
     /**

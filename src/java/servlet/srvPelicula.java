@@ -5,6 +5,8 @@
  */
 package servlet;
 
+import business.PeliculaUI;
+import entities.Pelicula;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -20,6 +22,11 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "srvPelicula", urlPatterns = {"/srvPelicula"})
 public class srvPelicula extends HttpServlet {
 
+
+    private static String INSERT_OR_EDIT = "./vista/pelicula/Pelicula.jsp";
+    private static String LIST_TARJETAS = "./vista/pelicula/lstPelicula.jsp";
+
+    PeliculaUI peliculaUI = new PeliculaUI();
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -58,7 +65,70 @@ public class srvPelicula extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+
+                String forward = "";
+                String action = "lstPeliculas";
+                if(request.getParameter("action") != null)
+                    action = request.getParameter("action");
+        
+                if (action.equalsIgnoreCase("delete")) {
+        
+                    boolean exito = false;
+                    int id = Integer.parseInt(request.getParameter("Id"));
+                    try {
+                        exito = peliculaUI.deletePelicula(id);
+                        forward = LIST_TARJETAS;
+                        request.setAttribute("peliculas", peliculaUI.getPelicula());
+                    } catch (SQLException ex) {
+                        Logger.getLogger(srvPelicula.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (ClassNotFoundException ex) {
+                        Logger.getLogger(srvPelicula.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+        
+                } else if (action.equalsIgnoreCase("edit")) {
+        
+                    forward = INSERT_OR_EDIT;
+                    int id = Integer.parseInt(request.getParameter("id"));
+                    Pelicula pelicula;
+                    try {
+                        pelicula = peliculaUI.getPelicula(id);
+                        request.setAttribute("tarjeta", pelicula);
+                    } catch (ClassNotFoundException ex) {
+                        Logger.getLogger(srvPelicula.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (SQLException ex) {
+                        Logger.getLogger(srvPelicula.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    //request.getRequestDispatcher(INSERT_OR_EDIT).forward(request, response);
+                    
+                    forward = INSERT_OR_EDIT;
+                    RequestDispatcher view = request.getRequestDispatcher(INSERT_OR_EDIT);
+                    view.forward(request, response);
+                    
+        
+                } else if (action.equalsIgnoreCase("lstTarjetas")) {
+        
+                    ArrayList<Pelicula> lstPeliculas = new ArrayList<Pelicula>();
+                    try {
+                        lstPeliculas = peliculaUI.getPelicula();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(srvPelicula.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (ClassNotFoundException ex) {
+                        Logger.getLogger(srvPelicula.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+        
+                    forward = LIST_TARJETAS;
+                    request.setAttribute("lstTarjetas", lstPeliculas);
+        
+                } else {
+                    Pelicula peli = new Pelicula();
+                    request.setAttribute("peli", peli);
+                    forward = INSERT_OR_EDIT;            
+                }
+                
+                RequestDispatcher view = request.getRequestDispatcher(forward);
+                view.forward(request, response);       
+                
+
     }
 
     /**

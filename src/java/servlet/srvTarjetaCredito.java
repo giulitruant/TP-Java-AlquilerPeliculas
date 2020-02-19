@@ -5,6 +5,8 @@
  */
 package servlet;
 
+import business.TarjetaCreditoUI;
+import entities.TarjetaCredito;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -20,6 +22,11 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "srvTarjetaCredito", urlPatterns = {"/srvTarjetaCredito"})
 public class srvTarjetaCredito extends HttpServlet {
 
+
+    private static String INSERT_OR_EDIT = "./vista/tarjeta/Tarjeta.jsp";
+    private static String LIST_TARJETAS = "./vista/tarjeta/lstTarjeta.jsp";
+
+    TarjetaCreditoUI tarjetaCreditoUi = new TarjetaCreditoUI();
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -58,7 +65,69 @@ public class srvTarjetaCredito extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        
+                String forward = "";
+                String action = "lstTarjetas";
+                if(request.getParameter("action") != null)
+                    action = request.getParameter("action");
+        
+                if (action.equalsIgnoreCase("delete")) {
+        
+                    boolean exito = false;
+                    int id = Integer.parseInt(request.getParameter("Id"));
+                    try {
+                        exito = tarjetaCreditoUi.deleteTarjetaC(id);
+                        forward = LIST_TARJETAS;
+                        request.setAttribute("tarjetas", tarjetaCreditoUi.getTarjetaC());
+                    } catch (SQLException ex) {
+                        Logger.getLogger(srvTarjetaCredito.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (ClassNotFoundException ex) {
+                        Logger.getLogger(srvTarjetaCredito.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+        
+                } else if (action.equalsIgnoreCase("edit")) {
+        
+                    forward = INSERT_OR_EDIT;
+                    int id = Integer.parseInt(request.getParameter("id"));
+                    Tarjeta tarjeta;
+                    try {
+                        tarjeta = tarjetaCreditoUi.getTarjetaC(id);
+                        request.setAttribute("tarjeta", tarjeta);
+                    } catch (ClassNotFoundException ex) {
+                        Logger.getLogger(srvTarjetaCredito.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (SQLException ex) {
+                        Logger.getLogger(srvTarjetaCredito.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    //request.getRequestDispatcher(INSERT_OR_EDIT).forward(request, response);
+                    
+                    forward = INSERT_OR_EDIT;
+                    RequestDispatcher view = request.getRequestDispatcher(INSERT_OR_EDIT);
+                    view.forward(request, response);
+                    
+        
+                } else if (action.equalsIgnoreCase("lstTarjetas")) {
+        
+                    ArrayList<Tarjeta> lstTarjetas = new ArrayList<Tarjeta>();
+                    try {
+                        lstTarjetas = tarjetaCreditoUi.getTarjetaC();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(srvTarjetaCredito.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (ClassNotFoundException ex) {
+                        Logger.getLogger(srvTarjetaCredito.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+        
+                    forward = LIST_TARJETAS;
+                    request.setAttribute("lstTarjetas", lstTarjetas);
+        
+                } else {
+                    Tarjeta tarjeta = new Tarjeta();
+                    request.setAttribute("tarjeta", tarjeta);
+                    forward = INSERT_OR_EDIT;            
+                }
+                
+                RequestDispatcher view = request.getRequestDispatcher(forward);
+                view.forward(request, response);
+                
     }
 
     /**
