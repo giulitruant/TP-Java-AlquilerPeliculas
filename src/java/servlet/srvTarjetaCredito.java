@@ -9,6 +9,11 @@ import business.TarjetaCreditoUI;
 import entities.TarjetaCredito;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -89,7 +94,7 @@ public class srvTarjetaCredito extends HttpServlet {
         
                     forward = INSERT_OR_EDIT;
                     int id = Integer.parseInt(request.getParameter("id"));
-                    Tarjeta tarjeta;
+                    TarjetaCredito tarjeta;
                     try {
                         tarjeta = tarjetaCreditoUi.getTarjetaC(id);
                         request.setAttribute("tarjeta", tarjeta);
@@ -107,7 +112,7 @@ public class srvTarjetaCredito extends HttpServlet {
         
                 } else if (action.equalsIgnoreCase("lstTarjetas")) {
         
-                    ArrayList<Tarjeta> lstTarjetas = new ArrayList<Tarjeta>();
+                    ArrayList<TarjetaCredito> lstTarjetas = new ArrayList<TarjetaCredito>();
                     try {
                         lstTarjetas = tarjetaCreditoUi.getTarjetaC();
                     } catch (SQLException ex) {
@@ -120,7 +125,7 @@ public class srvTarjetaCredito extends HttpServlet {
                     request.setAttribute("lstTarjetas", lstTarjetas);
         
                 } else {
-                    Tarjeta tarjeta = new Tarjeta();
+                    TarjetaCredito tarjeta = new TarjetaCredito();
                     request.setAttribute("tarjeta", tarjeta);
                     forward = INSERT_OR_EDIT;            
                 }

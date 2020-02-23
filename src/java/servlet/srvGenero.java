@@ -9,6 +9,11 @@ import business.GeneroUI;
 import entities.Genero;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -76,9 +81,9 @@ public class srvGenero extends HttpServlet {
                     boolean exito = false;
                     int id = Integer.parseInt(request.getParameter("Id"));
                     try {
-                        exito = generoUI.deleteAlquiler(id);
+                        exito = generoUI.deleteGenero(id);
                         forward = LIST_GENERO;
-                        request.setAttribute("generos", generoUI.getAlquiler());
+                        request.setAttribute("generos", generoUI.getGenero());
                     } catch (SQLException ex) {
                         Logger.getLogger(srvGenero.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (ClassNotFoundException ex) {
