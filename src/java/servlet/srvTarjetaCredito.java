@@ -28,8 +28,8 @@ import javax.servlet.http.HttpServletResponse;
 public class srvTarjetaCredito extends HttpServlet {
 
 
-    private static String INSERT_OR_EDIT = "./vista/tarjeta/Tarjeta.jsp";
-    private static String LIST_TARJETAS = "./vista/tarjeta/lstTarjeta.jsp";
+    private static String INSERT_OR_EDIT = "./vista/tarjeta/TarjetaCredito.jsp";
+    private static String LIST_TARJETAS = "./vista/tarjeta/lstTarjetaCredito.jsp";
 
     TarjetaCreditoUI tarjetaCreditoUi = new TarjetaCreditoUI();
     /**

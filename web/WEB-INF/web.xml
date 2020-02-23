@@ -7,7 +7,7 @@
     <servlet>
         <servlet-name>srvAlquiler</servlet-name>
         <servlet-class>servlet.srvAlquiler</servlet-class>
-    </servlet>   
+    </servlet>
     <servlet>
         <servlet-name>srvLineaAlquiler</servlet-name>
         <servlet-class>servlet.srvLineaAlquiler</servlet-class>

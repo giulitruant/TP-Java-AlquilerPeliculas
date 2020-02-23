@@ -29,7 +29,7 @@ public class srvAlquiler extends HttpServlet {
 
 
     private static String INSERT_OR_EDIT = "./vista/alquiler/Alquiler.jsp";
-    private static String LIST_ALQUILER = "./vista/alquiler/lstAlquiler.jsp";
+    private static String LIST_ALQUILER = "./vista/alquiler/lstAlquileres.jsp";
 
     AlquilerUI alquilerUI = new AlquilerUI();
     /**

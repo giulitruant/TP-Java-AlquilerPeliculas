@@ -27,7 +27,6 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "srvPelicula", urlPatterns = {"/srvPelicula"})
 public class srvPelicula extends HttpServlet {
 
-
     private static String INSERT_OR_EDIT = "./vista/pelicula/Pelicula.jsp";
     private static String LIST_TARJETAS = "./vista/pelicula/lstPelicula.jsp";
 

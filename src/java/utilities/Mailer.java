@@ -1,5 +1,6 @@
 package utilities;
 
+import com.sun.mail.smtp.SMTPTransport;
 
 import java.util.List;
 import java.util.Properties;
@@ -21,8 +22,8 @@ public class Mailer {
         props.put("mail.smtp.starttls.enable", "true"); //inicializar el servidor  
         props.put("mail.smtp.auth", "true"); //autentificacion   
         String identifica = mail.getOrigen().substring(  
-        mail.getOrigen().indexOf("@") + 1,  
-        mail.getOrigen().indexOf("@") + 6);  
+        mail.getOrigen().indexOf("@") + 1,
+        mail.getOrigen().indexOf("@") + 6);
         if (identifica.equals("gmail")) {  
             props.put("mail.smtp.host", "smtp.gmail.com"); //tipo de servidor        
             props.put("mail.smtp.socketFactory.port", "465"); //activar el puerto  
