@@ -151,16 +151,25 @@ public class srvLstUsuarios extends HttpServlet {
         socio.setDomicilio(request.getParameter("domicilio"));
         socio.setEstado(request.getParameter("estado"));
         socio.setTelefono(request.getParameter("telefono"));
-        socio.setNroTarjeta(request.getParameter("nroTarjeta"));
+        
+        if(request.getParameter("nroTarjeta") == null || request.getParameter("nroTarjeta") == "")
+        {
+            socio.setNroTarjeta(null);
+        }
+        else
+        {
+            String tarjeta = request.getParameter("nroTarjeta");
+            socio.setNroTarjeta(Integer.parseInt(tarjeta));
+        }
         
         usuario.setEmail(request.getParameter("email"));
         usuario.setContrasena(request.getParameter("contrasena"));       
         String idUsuario = request.getParameter("idUsuario");
         if(idUsuario == null || idUsuario.isEmpty())
         {
-            try {            
-                socioUI.addUsuario(socio);
-                usuarioUI.addUsuario(usuario);                
+            try {
+                //socioUI.addSocio(socio);
+                usuarioUI.addUsuario(usuario, socio);
             } catch (SQLException ex) {
                 Logger.getLogger(srvLstUsuarios.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -185,8 +194,7 @@ public class srvLstUsuarios extends HttpServlet {
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(srvLstUsuarios.class.getName()).log(Level.SEVERE, null, ex);
         }
-        request.getRequestDispatcher(LIST_USER).forward(request, response);
-            
+        request.getRequestDispatcher(LIST_USER).forward(request, response);            
                    
     }
 

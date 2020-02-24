@@ -7,9 +7,12 @@ package data;
 
 import java.sql.Connection;
 import entities.Usuario;
+import entities.Socio;
+import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 /**
@@ -20,16 +23,86 @@ public class UsuarioDAO extends Conexion {
 
     Connection conn = null;
 
-    public void addUsuario(Usuario user) throws SQLException {
+    public void addUsuario(Usuario user, Socio socio) throws SQLException {
         conn = this.getConnection();
-        PreparedStatement st = conn.prepareStatement("insert into usuario values( ?, ?)");
-        
-        st.setString(1, user.getEmail());
-        st.setString(2, user.getContrasena());
+        PreparedStatement st = null;
+        int rowAffected;
+        ResultSet rs = null;
+        try {
+            
+            
+            conn.setAutoCommit(false); 
+            
+            String query = "insert into socio(nombre, apellido, domicilio, telefono, nroTarjeta, estado) "
+                    + "values(?, ?, ?, ?, ?, ?)";
+            
+            st = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            
+            st.setString(1, socio.getNombre());
+            st.setString(2, socio.getApellido());
+            st.setString(3, socio.getDomicilio());
+            st.setString(4, socio.getTelefono());
+            if(socio.getNroTarjeta() == null)
+            {
+                st.setNull(5, java.sql.Types.INTEGER);
+            }
+            else
+            {
+                st.setInt(5, socio.getNroTarjeta());
+            }
+            
+            st.setString(6, socio.getEstado());
+            
+            rowAffected = st.executeUpdate();
 
-        st.executeUpdate();
-        st.close();
-        conn.close();
+            //get candidate id
+            rs = st.getGeneratedKeys();
+            int candidateId = 0;
+            if (rs.next()) {
+                candidateId = rs.getInt(1);
+            }
+
+            // in case the insert operation successes, assign skills to candidate
+            if (rowAffected == 1) {
+
+                user.setIdUsuario(candidateId);
+
+                st = conn.prepareStatement("insert into usuario(idUsuario, email, contrasena) values(?, ?, ?)");
+
+                st.setInt(1, user.getIdUsuario());
+                st.setString(1, user.getEmail());
+                st.setString(2, user.getContrasena());
+                
+                rowAffected = st.executeUpdate();
+                
+                if (rowAffected != 1)
+                    throw new SQLException();                
+                
+            }
+
+            conn.commit();
+            st.close();
+            conn.close();
+
+        } catch (SQLException ex) {
+            conn.rollback();
+        } finally {
+            try {
+                if (st != null) {
+                    st.close();
+                }
+                if (rs != null) {
+                    rs.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+
+            } catch (SQLException ex) {
+                System.out.printf(ex.getMessage());
+            }
+        }
+
     }
 
     public int deleteUsuario(int idUsuario) throws ClassNotFoundException, SQLException {
@@ -80,7 +153,7 @@ public class UsuarioDAO extends Conexion {
         return user;
 
     }
-    
+
     public Usuario getUsuario(int id) throws ClassNotFoundException, SQLException {
         Usuario user = new Usuario();
         conn = this.getConnection();

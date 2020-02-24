@@ -8,7 +8,7 @@ public class Socio{
     private String domicilio;
     private String telefono;
     private String mail;
-    private String nroTarjeta;
+    private Integer nroTarjeta;
     private String estado;   
     
     public int getNroSocio() {
@@ -49,10 +49,10 @@ public class Socio{
 		this.mail = mail;
     }
 
-    public String getNroTarjeta() {
+    public Integer getNroTarjeta() {
 		return nroTarjeta;
 	}
-	public void setNroTarjeta(String nroTarjeta) {
+	public void setNroTarjeta(Integer nroTarjeta) {
 		this.nroTarjeta = nroTarjeta;
     }
 

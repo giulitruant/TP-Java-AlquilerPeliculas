@@ -21,10 +21,10 @@
             <table class="table table-striped">
                 <thead>
                 <tr>
-                    <th>Id Usuario :</th>
-                    <th>Usuario :</th>
-                    <th>Actualizar :</th>
-                    <th>Eliminar :</th>
+                    <th>Id Usuario</th>
+                    <th>Usuario</th>
+                    <th>Actualizar</th>
+                    <th>Eliminar</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -40,17 +40,17 @@
                     <th><%=usu.getIdUsuario()%></th>
                     <th><%=usu.getEmail()%></th>
                     <th>
-                        <form method="POST" action="srvLstUsuarios" onclick="if (!confirm('Esta seguro de eliminar el usuario'))">
-                    <button class="glyphicon glyphicon-trash"></button>
+                    <form method="POST" action="srvLstUsuarios" onclick="if (!confirm('Esta seguro de eliminar el usuario'))">
+                    <button class="btn-danger">Eliminar</button>
                     <input type="hidden" name="action" value="delete">
-                    <input tupe="hidden" name="id" value="<%=usu.getIdUsuario()%>" >
+                    <input type="hidden" name="id" value="<%=usu.getIdUsuario()%>" >
                 </form>
                     </th>
                     <th>
                     <form method="POST" action="srvLstUsuarios">
-                    <button class="glyphicon glyphicon-pencil"></button>
+                        <button class="btn-info">Editar</button>
                     <input type="hidden" name="action" value="edit">
-                    <input tupe="hidden" name="id" value="<%=usu.getIdUsuario()%>" >
+                    <input type="hidden" name="id" value="<%=usu.getIdUsuario()%>" >
                     </th>
                 </form>  
                 </tr>
@@ -79,11 +79,11 @@
             </table>
             
             <div id="new">
-                <a class="glyphicon glyphicon-plus" href="srvLstUsuarios?action=insert">Nuevo</a>
+                <a class="btn-info" href="srvLstUsuarios?action=insert">Nuevo</a>
             </div>            
         </form>
                 
-        <a href="index.html">Volver</a>  
+        <a class="btn-info" href="index.html">Volver</a>  
         </div>
     </body>
 </html>

@@ -6,6 +6,7 @@
 package business;
 
 import data.UsuarioDAO;
+import entities.Socio;
 import entities.Usuario;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -18,8 +19,8 @@ public class UsuarioUI {
 
     UsuarioDAO usuarioDAO = new UsuarioDAO();
 
-    public void addUsuario(Usuario user) throws SQLException{                
-        usuarioDAO.addUsuario(user);
+    public void addUsuario(Usuario user, Socio socio) throws SQLException{
+        usuarioDAO.addUsuario(user, socio);
         
     }
     
