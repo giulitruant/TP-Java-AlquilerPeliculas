@@ -70,8 +70,8 @@ public class UsuarioDAO extends Conexion {
                 st = conn.prepareStatement("insert into usuario(idUsuario, email, contrasena) values(?, ?, ?)");
 
                 st.setInt(1, user.getIdUsuario());
-                st.setString(1, user.getEmail());
-                st.setString(2, user.getContrasena());
+                st.setString(2, user.getEmail());
+                st.setString(3, user.getContrasena());
                 
                 rowAffected = st.executeUpdate();
                 
@@ -111,6 +111,14 @@ public class UsuarioDAO extends Conexion {
         PreparedStatement stmt = conn.prepareStatement("delete from usuario where idUsuario = ? ");
         stmt.setInt(1, Integer.valueOf(idUsuario));
         int rta = stmt.executeUpdate();
+        
+        if(rta == 1)
+        {
+            stmt = conn.prepareStatement("delete from socio where nroSocio = ? ");
+            stmt.setInt(1, Integer.valueOf(idUsuario));
+            rta = stmt.executeUpdate();
+        }
+        
         return rta;
 
     }

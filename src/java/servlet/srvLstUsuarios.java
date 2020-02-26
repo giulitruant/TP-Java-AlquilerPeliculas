@@ -28,36 +28,17 @@ import javax.servlet.RequestDispatcher;
  */
 @WebServlet(name = "srvLstUsuarios", urlPatterns = {"/srvLstUsuarios"})
 public class srvLstUsuarios extends HttpServlet {
-    
+
     private static String INSERT_OR_EDIT = "./vista/usuario/Usuario.jsp";
     private static String LIST_USER = "./vista/usuario/lstUsuarios.jsp";
 
     UsuarioUI usuarioUI = new UsuarioUI();
     SocioUI socioUI = new SocioUI();
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
     }
-
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
+    
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -65,66 +46,68 @@ public class srvLstUsuarios extends HttpServlet {
 
         String forward = "";
         String action = "lstUser";
-        if(request.getParameter("action") != null)
+        if (request.getParameter("action") != null) {
             action = request.getParameter("action");
+        }
 
         if (action.equalsIgnoreCase("delete")) {
 
             boolean exito = false;
-            int userId = Integer.parseInt(request.getParameter("userId"));
+            int userId = Integer.parseInt(request.getParameter("id"));
             try {
                 exito = usuarioUI.deleteUsuario(userId);
                 forward = LIST_USER;
-                request.setAttribute("users", usuarioUI.getUsuarios());
+                request.setAttribute("lstUsuarios", usuarioUI.getUsuarios());
             } catch (SQLException ex) {
                 Logger.getLogger(srvLstUsuarios.class.getName()).log(Level.SEVERE, null, ex);
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(srvLstUsuarios.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            }            
 
         } else if (action.equalsIgnoreCase("edit")) {
 
-            forward = INSERT_OR_EDIT;
-            int userId = Integer.parseInt(request.getParameter("userId"));
-            Usuario user;
-            try {
-                user = usuarioUI.getUserbyId(userId);
-                request.setAttribute("user", user);
-            } catch (ClassNotFoundException ex) {
-                Logger.getLogger(srvLstUsuarios.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (SQLException ex) {
-                Logger.getLogger(srvLstUsuarios.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            //request.getRequestDispatcher(INSERT_OR_EDIT).forward(request, response);
+            forward = INSERT_OR_EDIT;            
+            Usuario user = new Usuario();
+            Socio socio = new Socio();
             
+            if(request.getParameter("id") != null){
+                Integer id = Integer.parseInt(request.getParameter("id"));
+                try {
+                    user = usuarioUI.getUserbyId(id);
+                    socio = socioUI.getSocio(id);
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(srvLstUsuarios.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (SQLException ex) {
+                    Logger.getLogger(srvLstUsuarios.class.getName()).log(Level.SEVERE, null, ex);
+                }                
+            }
+            
+            request.setAttribute("user", user);
+            request.setAttribute("socio", socio);
+
             forward = INSERT_OR_EDIT;
             RequestDispatcher view = request.getRequestDispatcher(INSERT_OR_EDIT);
             view.forward(request, response);
-            
 
         } else if (action.equalsIgnoreCase("lstUser")) {
-
-            ArrayList<Usuario> lstUsuarios = new ArrayList<Usuario>();
+            
             try {
-                lstUsuarios = usuarioUI.getUsuarios();
+                forward = LIST_USER;
+                request.setAttribute("lstUsuarios",usuarioUI.getUsuarios());
             } catch (SQLException ex) {
                 Logger.getLogger(srvLstUsuarios.class.getName()).log(Level.SEVERE, null, ex);
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(srvLstUsuarios.class.getName()).log(Level.SEVERE, null, ex);
             }
-
-            forward = LIST_USER;
             
-            request.setAttribute("lstUsuarios", lstUsuarios);
-            //request.getRequestDispatcher(LIST_USER).forward(request, response);
-
         } else {
             Usuario user = new Usuario();
+            Socio socio = new Socio();
             request.setAttribute("user", user);
+            request.setAttribute("socio", socio);
             forward = INSERT_OR_EDIT;
-            //response.sendRedirect("srvUsuario");
         }
-        
+
         RequestDispatcher view = request.getRequestDispatcher(forward);
         view.forward(request, response);
 
@@ -140,62 +123,59 @@ public class srvLstUsuarios extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processRequest(request, response);
-        
+            throws ServletException, IOException {        
+
         Usuario usuario = new Usuario();
         Socio socio = new Socio();
+
+        Integer id;
         
         socio.setNombre(request.getParameter("nombre"));
-        socio.setApellido(request.getParameter("apellido"));
-        socio.setDomicilio(request.getParameter("domicilio"));
-        socio.setEstado(request.getParameter("estado"));
-        socio.setTelefono(request.getParameter("telefono"));
-        
-        if(request.getParameter("nroTarjeta") == null || request.getParameter("nroTarjeta") == "")
-        {
-            socio.setNroTarjeta(null);
-        }
-        else
-        {
-            String tarjeta = request.getParameter("nroTarjeta");
-            socio.setNroTarjeta(Integer.parseInt(tarjeta));
-        }
-        
-        usuario.setEmail(request.getParameter("email"));
-        usuario.setContrasena(request.getParameter("contrasena"));       
-        String idUsuario = request.getParameter("idUsuario");
-        if(idUsuario == null || idUsuario.isEmpty())
-        {
+            socio.setApellido(request.getParameter("apellido"));
+            socio.setDomicilio(request.getParameter("domicilio"));
+            socio.setEstado(request.getParameter("estado"));
+            socio.setTelefono(request.getParameter("telefono"));
+
+            usuario.setEmail(request.getParameter("email"));
+            usuario.setContrasena(request.getParameter("contrasena"));
+            
+            if (request.getParameter("nroTarjeta") == null || request.getParameter("nroTarjeta") == "") {
+                socio.setNroTarjeta(null);
+            } else {
+                String tarjeta = request.getParameter("nroTarjeta");
+                socio.setNroTarjeta(Integer.parseInt(tarjeta));
+            }
+            
+        if ("null".equals(request.getParameter("id"))) {
+
             try {
-                //socioUI.addSocio(socio);
-                usuarioUI.addUsuario(usuario, socio);
+                usuarioUI.addUsuario(usuario, socio);                
             } catch (SQLException ex) {
                 Logger.getLogger(srvLstUsuarios.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }
-        else
-        {            
-            usuario.setIdUsuario(Integer.parseInt(idUsuario));
-            try {            
+            
+       } else
+
+            try {
+
                 socioUI.updateSocio(socio);
                 usuarioUI.updateUsuario(usuario);
+                request.getRequestDispatcher(INSERT_OR_EDIT).forward(request, response);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(srvLstUsuarios.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SQLException ex) {
+                Logger.getLogger(srvLstUsuarios.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        
+         try {
+             request.setAttribute("lstUsuarios", usuarioUI.getUsuarios());                
             } catch (SQLException ex) {
                 Logger.getLogger(srvLstUsuarios.class.getName()).log(Level.SEVERE, null, ex);
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(srvLstUsuarios.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }        
-        
-        try {
-            request.setAttribute("lstUsuarios", usuarioUI.getUsuarios());
-        } catch (SQLException ex) {
-            Logger.getLogger(srvLstUsuarios.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(srvLstUsuarios.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        request.getRequestDispatcher(LIST_USER).forward(request, response);            
-                   
+            request.getRequestDispatcher(LIST_USER).forward(request, response);
+
     }
 
     /**
@@ -206,6 +186,6 @@ public class srvLstUsuarios extends HttpServlet {
     @Override
     public String getServletInfo() {
         return "Short description";
-    }// </editor-fold>
-
+    }// </editor-fold>    
+    
 }
